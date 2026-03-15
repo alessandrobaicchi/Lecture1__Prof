@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import date
+from datetime import date # Libreria che gestisce le date
 
 from gestionale.core.clienti import Cliente, ClienteRecord
 from gestionale.core.prodotti import ProdottoRecord
@@ -15,12 +15,15 @@ class Fattura:
 #VERSIONE SPAZIATA MEGLIO
     def genera_fattura(self) -> str:
         """Genera il testo della fattura."""
-        linee = [
+        linee = [       # linee è una lista di stringhe
             "=" * 60,
+            # Intestazione della fattura: data e numero fattura
             f"FATTURA N. {self.numero_fattura}".center(60),
             f"Data: {self.data.strftime('%d/%m/%Y')}".center(60),
             "=" * 60,
             "",
+            #
+            # Dettagli del cliente
             f"Cliente: {self.ordine.cliente.nome}",
             f"Email: {self.ordine.cliente.mail}",
             f"Categoria: {self.ordine.cliente.categoria}",
@@ -48,6 +51,8 @@ class Fattura:
         ])
 
         return "\n".join(linee)
+        # Restituisce una stringa che va a capo e poi contiene tutte le stringhe che abbiamo costruito
+
 
 #VERSIONE SCRITTA IN CLASSE
     # def genera_fattura(self):
@@ -81,8 +86,9 @@ class Fattura:
 
 
 
-def _test_modulo():
-
+def _test_modulo(): #Metodo di classe
+# Questo codice lo eseguo solo quando chiamo fatture.py in maniera standalone e non quando viene importato.
+# Tale test verrà chiamato grazie all'if sotto.
     p1 = ProdottoRecord("Laptop", 1200.0)
     p2 = ProdottoRecord("Mouse", 20.0)
     p3 = ProdottoRecord("Tablet", 600.0)

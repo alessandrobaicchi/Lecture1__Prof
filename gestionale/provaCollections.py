@@ -1,6 +1,9 @@
 import copy
+from collections import Counter
 
+from gestionale.core.clienti import ClienteRecord
 from gestionale.core.prodotti import ProdottoRecord
+from gestionale.vendite.ordini import Ordine
 
 # OGGETTI (istanze) di tipo ProdottoRecord
 p1 = ProdottoRecord("Laptop", 1200.0)
@@ -200,6 +203,7 @@ prodotti_ordine_A = {ProdottoRecord("Laptop", 1200),
 prodotti_ordine_B = {ProdottoRecord("Laptop2", 1200),
                      ProdottoRecord("Mouse2", 20),
                      ProdottoRecord("Tablet", 700)}
+# Nota. Ho dovuto scrivere una funzione di hash() per ProdottoRecord perché il set vuole oggetti hashable.
 
 #METODI UTILI per i set
 s = set()
@@ -239,3 +243,177 @@ s.update([ProdottoRecord("aaa", 20.0), ProdottoRecord("bbb", 20.0)]) #aggiungo p
 # s1.isdisjoint(s) # se gli elementi di s e quelli di s1 sono diversi
 
 
+
+
+
+
+
+####################################### DIZIONARI ###############################################
+catalogo = {
+    # E' un Dizionario: chiave = codice prodotto (stringa, che è hashable)
+    #                   valore = istanza di ProdottoRecord
+    "LAP001": ProdottoRecord("Laptop", 1200.0),
+    "LAP002": ProdottoRecord("Laptop Pro", 2300.0),
+    "MAU001": ProdottoRecord("Mouse", 20.0),
+    "AUR001": ProdottoRecord("Auricolari", 250.0),
+}
+# Accesso O(1): recupero diretto del prodotto tramite la chiave
+cod = "LAP002"
+
+prod = catalogo[cod]
+# Grazie al metodo __str__, la stampa è leggibile
+print(f"Il prodotto con codice {cod} è {prod}")
+
+
+# Se accedo a una chiave inesistente con [], ottengo un KeyError.
+# catalogo["NonEsiste"]
+# get() evita il KeyError e restituisce None se la chiave non esiste.
+prod1 = catalogo.get("NonEsiste")
+if prod1 is None:
+    print("Prodotto non trovato")
+
+# Possiamo specificare un valore di default da restituire se la chiave non esiste.
+prod2 = catalogo.get("NonEsiste2", ProdottoRecord("Sconosciuto", 0.0))
+print(prod2)
+
+
+# --- Ciclare su un dizionario ---
+
+# Recupero delle chiavi e dei valori (view objects).
+keys = list(catalogo.keys())     # Converto in lista per stamparli facilmente.
+values = list(catalogo.values())
+
+for k in keys:
+    print(k)                     # Stampa tutte le chiavi del dizionario.
+
+for v in values:
+    print(v)                     # Stampa tutti i valori del dizionario.
+
+# Iterazione diretta su chiave e valore tramite items().
+for k, v in catalogo.items():
+    print(f"Il codice {k} è associato a: {v}")
+
+
+
+# --- Rimuovere oggetti da un dizionario ---
+# pop() rimuove la chiave e restituisce il valore associato.
+rimosso = catalogo.pop("LAP002")
+print(rimosso)
+
+
+
+# --- Dict comprehension ---
+# Creo un nuovo dizionario che mappa codice → prezzo.
+prezzi = {codice: prod.prezzo_unitario for codice, prod in catalogo.items()}
+
+
+# Altri metodi da sapere
+# d[key] = v # Scrivere sul dizionario
+# v = d[key] # Leggere da un dizionario, restituisce "keyerror" se non esiste quella chiave
+# v = d.get(key, default) # Leggere da un dizionario senza rischiare "keyerror", se non esiste restituisce il default
+# d.pop(key) # Restituisce un valore e lo cancella dal dizionario
+# d.clear() # Elimina tutto
+# d.keys() # Restituisce tutte le chiavi definite nel dizionario
+# d.values() # Restituisce tutti i valori definiti nel dizionario
+# d.items() # Restituisce tutte le coppie chiave + valore definite nel dizionario
+# k in d # Condizione che verifica se key è presente nel dizionario
+
+
+"""Esercizio live -- Per ciascuno di questi casi, decidere quale struttura dati usare:"""
+
+# 1) Memorizzare un elenco di ordini da processare in ordine di arrivo
+# Una LISTA mantiene l'ordine di inserimento ed è perfetta per una coda semplice.
+ordini_da_processare = []
+
+o1 = Ordine([], ClienteRecord("Mario Rossi", "mario@polito.it", "Gold"))
+o2 = Ordine([], ClienteRecord("Mario Bianchi", "bianchi@polito.it", "Silver"))
+o3 = Ordine([], ClienteRecord("Fulvio Rossi", "fulvio@polito.it", "Bronze"))
+o4 = Ordine([], ClienteRecord("Carlo Masone", "carlo@polito.it", "Gold"))
+
+# Salvo anche il tempo di arrivo per poter ordinare successivamente.
+ordini_da_processare.append((o1, 0))
+ordini_da_processare.append((o2, 10))
+ordini_da_processare.append((o3, 3))
+ordini_da_processare.append((o4, 45))
+
+
+# 2) Memorizzare i codici fiscali dei clienti (univoco)
+# Un SET garantisce l'unicità degli elementi.
+codici_fiscali = {
+    "gjdlkgkdjg52",
+    "ojoirehghpreiuh25",
+    "euyiifgugfuioi78",
+    "euyiifgugfuioi78"  # duplicato, verrà ignorato
+}
+print(codici_fiscali)
+
+
+# 3) Creare un database di prodotti cercabili tramite codice univoco
+# Un DIZIONARIO permette ricerche O(1) tramite chiave.
+listino_prodotti = {
+    "LAP0001": ProdottoRecord("Laptop", 1200.0),
+    "KEY001": ProdottoRecord("Keybord", 20.0),
+}
+
+
+# 4) Memorizzare le coordinate GPS della nuova sede di Roma
+# Una TUPLA è immutabile e perfetta per dati fissi.
+magazzino_roma = (45, 6)
+
+
+# 5) Tenere traccia delle categorie dei clienti che hanno fatto un ordine
+# Un SET evita duplicati e permette aggiunte O(1).
+categorie_periodo = set()
+categorie_periodo.add("Gold")
+categorie_periodo.add("Bronze")
+
+
+
+
+
+###################################### COUNTER ##########################################
+
+print("=================================================================================")
+lista_clienti = [
+    ClienteRecord("Mario Rossi", "mario@polito.it", "Gold"),
+    ClienteRecord("Mario Bianchi", "bianchi@polito.it", "Silver"),
+    ClienteRecord("Fulvio Rossi", "fulvio@polito.it", "Bronze"),
+    ClienteRecord("Carlo Masone", "carlo@polito.it", "Gold"),
+    ClienteRecord("Mario Bianchi", "mario@polito.it", "Gold"),
+    ClienteRecord("Giuseppe Averta", "bianchi@polito.it", "Silver"),
+    ClienteRecord("Francesca Pistilli", "fulvio@polito.it", "Bronze"),
+    ClienteRecord("Carlo Masone", "carlo@polito.it", "Gold"),
+    ClienteRecord("Fulvio Corno", "carlo@polito.it", "Silver")
+]
+
+categorie = [c.categoria for c in lista_clienti]
+categorie_counter = Counter(categorie)
+
+print("Distribuzione categorie clienti")
+print(categorie_counter)
+
+print("Le due categorie più frequenti sono:")
+print(categorie_counter.most_common(2))
+
+print("Totale elementi:")
+print(categorie_counter.total())
+
+vendite_gennaio = Counter({"Laptop": 13, "Tablet": 15})
+vendite_febbraio = Counter({"Laptop": 3, "Stampanti": 1})
+vendite_bimestre = vendite_gennaio + vendite_febbraio
+
+# Aggregare informazioni
+print(f"Vendite Gennaio: {vendite_gennaio}")
+print(f"Vendite Febbraio: {vendite_febbraio}")
+print(f"Vendite Bimestre: {vendite_bimestre}")
+
+# Fare la differenza
+print(f"Differenza vendite: {vendite_gennaio - vendite_febbraio}")
+
+# Modificare i valori in the fly
+vendite_gennaio["Laptop"] += 4
+print(f"Vendite Gennaio: {vendite_gennaio}")
+
+# Metodi da ricordare
+# c.most_common(n) # Restituisce gli n elementi più frequenti
+# c.total() # Somma dei conteggi

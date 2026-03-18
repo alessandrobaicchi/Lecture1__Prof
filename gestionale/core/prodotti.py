@@ -93,6 +93,19 @@ class ProdottoRecord:
     name: str
     prezzo_unitario: float
 
+    # Rendo l'oggetto hashable calcolando l'hash di una tupla
+    # contenente gli attributi che identificano univocamente l'istanza.
+    # Necessario per usare l'oggetto come chiave di dizionario o in un set.
+    # Rendo l'oggetto hashable calcolando l'hash di una tupla
+    # contenente gli attributi che identificano univocamente l'istanza.
+    # Necessario per usare l'oggetto come chiave di dizionario o in un set.
+    def __hash__(self):
+        return hash((self.name, self.prezzo_unitario))
+
+    # Creo un metodo per una stampa "più bella"
+    def __str__(self):
+        return f"{self.name} -- {self.prezzo_unitario}"
+
 MAX_QUANTITA = 1000
 
 def crea_prodotto_standard(nome: str, prezzo: float):

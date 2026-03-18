@@ -26,6 +26,9 @@ class GestoreOrdini:
 
         # defaultdict(list) permette di raggruppare ordini per categoria cliente
         # senza dover controllare se la chiave esiste.
+        # defaultdict(list) è un dizionario speciale che funziona così:
+        #   --> se si accede ad una chiave che non esiste, inveve di dare errore crea
+        #       automaticamente un valore di default, in questo caso una lista vuota!
         self._ordini_per_categoria = defaultdict(list)
 
 

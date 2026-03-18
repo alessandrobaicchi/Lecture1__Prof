@@ -37,6 +37,9 @@ class ClienteRecord:
     mail: str
     categoria: str
 
+    def __str__(self):
+        # Rappresentazione leggibile del cliente per stampe e logging
+        return f" Cliente {self.nome} ({self.categoria}) - {self.mail}"
 
 def _test_modulo():
     c1 = Cliente("Mario Bianchi", "mario.bianchi@polito.it", "Gold")

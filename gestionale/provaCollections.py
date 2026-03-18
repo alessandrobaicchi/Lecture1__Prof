@@ -1,9 +1,9 @@
 import copy
-from collections import Counter
+from collections import Counter, deque
 
 from gestionale.core.clienti import ClienteRecord
 from gestionale.core.prodotti import ProdottoRecord
-from gestionale.vendite.ordini import Ordine
+from gestionale.vendite.ordini import Ordine, RigaOrdine
 
 # OGGETTI (istanze) di tipo ProdottoRecord
 p1 = ProdottoRecord("Laptop", 1200.0)
@@ -426,3 +426,38 @@ print(f"Vendite Gennaio aggiornate: {vendite_gennaio}")
 # Metodi da ricordare:
 # c.most_common(n)  -> restituisce gli n elementi più frequenti
 # c.total()         -> somma dei conteggi
+
+
+
+
+###################################### DEQUE ##########################################
+
+print("=================================================================================")
+print("Deque")
+
+coda_ordini = deque()
+# Creo una coda FIFO di ordini usando deque (O(1) per append e popleft)
+
+for i in range(1, 10):
+    # Simulo l'arrivo di un nuovo ordine
+    cliente = ClienteRecord(f"Cliente {i}", f"cliente{i}@polito.it", "Gold")
+    # Creo un cliente con nome e mail parametrica, categoria fissa
+    prodotto = ProdottoRecord(f"Prodotto{i}", 100.0 * i)
+    # Creo un prodotto con nome parametrico e prezzo crescente
+    ordine = Ordine([RigaOrdine(prodotto, 1)], cliente)
+    # Creo un ordine composto da una singola riga ordine
+    coda_ordini.append(ordine)
+    # Accodo l'ordine alla coda FIFO (append → aggiunge a destra)
+
+print(f"Ordini in coda: {len(coda_ordini)}")
+# Stampo quanti ordini sono stati accodati
+
+while coda_ordini:
+    # Il ciclo continua finché la coda non è vuota
+    ordine_corrente = coda_ordini.popleft()
+    # popleft → rimuove l'ordine più vecchio (FIFO)
+    print(f"Sto gestendo l'ordine del cliente: {ordine_corrente.cliente}")
+    # Stampo il cliente dell'ordine corrente (usa __str__)
+
+print("Ho processato tutti gli ordini!")
+# Conferma finale quando la coda è vuota

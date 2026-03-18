@@ -374,6 +374,8 @@ categorie_periodo.add("Bronze")
 ###################################### COUNTER ##########################################
 
 print("=================================================================================")
+
+# Lista di clienti che hanno effettuato ordini
 lista_clienti = [
     ClienteRecord("Mario Rossi", "mario@polito.it", "Gold"),
     ClienteRecord("Mario Bianchi", "bianchi@polito.it", "Silver"),
@@ -386,34 +388,41 @@ lista_clienti = [
     ClienteRecord("Fulvio Corno", "carlo@polito.it", "Silver")
 ]
 
+# Estraggo tutte le categorie tramite list comprehension
 categorie = [c.categoria for c in lista_clienti]
+
+# Creo un Counter per contare le occorrenze delle categorie
 categorie_counter = Counter(categorie)
 
 print("Distribuzione categorie clienti")
 print(categorie_counter)
 
+# Mostro le due categorie più frequenti
 print("Le due categorie più frequenti sono:")
 print(categorie_counter.most_common(2))
 
+# Totale degli elementi contati
 print("Totale elementi:")
 print(categorie_counter.total())
 
+# Counter per vendite mensili
 vendite_gennaio = Counter({"Laptop": 13, "Tablet": 15})
 vendite_febbraio = Counter({"Laptop": 3, "Stampanti": 1})
+
+# Aggregazione tramite somma
 vendite_bimestre = vendite_gennaio + vendite_febbraio
 
-# Aggregare informazioni
 print(f"Vendite Gennaio: {vendite_gennaio}")
 print(f"Vendite Febbraio: {vendite_febbraio}")
 print(f"Vendite Bimestre: {vendite_bimestre}")
 
-# Fare la differenza
+# Differenza tra Counter
 print(f"Differenza vendite: {vendite_gennaio - vendite_febbraio}")
 
-# Modificare i valori in the fly
+# Modifica dei valori on the fly
 vendite_gennaio["Laptop"] += 4
-print(f"Vendite Gennaio: {vendite_gennaio}")
+print(f"Vendite Gennaio aggiornate: {vendite_gennaio}")
 
-# Metodi da ricordare
-# c.most_common(n) # Restituisce gli n elementi più frequenti
-# c.total() # Somma dei conteggi
+# Metodi da ricordare:
+# c.most_common(n)  -> restituisce gli n elementi più frequenti
+# c.total()         -> somma dei conteggi

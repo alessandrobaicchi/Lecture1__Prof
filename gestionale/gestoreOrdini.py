@@ -183,8 +183,10 @@ class GestoreOrdini:
 
 
 def test_modulo():
+       # Crea un'istanza della classe GestoreOrdini.
        sistema = GestoreOrdini()
 
+       # Creo degli ordini per poter testare GestoreOrdini
        ordini = [
            Ordine([RigaOrdine(ProdottoRecord("Laptop", 1200.0), 1),
                    RigaOrdine(ProdottoRecord("Mouse", 10.0), 3)],

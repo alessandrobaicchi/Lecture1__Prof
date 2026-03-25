@@ -46,6 +46,11 @@ class GestoreOrdini:
         print(f"Ordini ancora da evadere: {len(self._ordini_da_processare)}")
 
 
+    def crea_ordine(self, nomeP, prezzoP, quantitaP, nomeC, emailC, categoriaC):
+        return Ordine([RigaOrdine(ProdottoRecord(nomeP,prezzoP),quantitaP)],
+                      ClienteRecord(nomeC,emailC,categoriaC))
+
+
     def processa_prossimo_ordine(self):
         """
             Processa il prossimo ordine nella coda FIFO (_ordini_da_processare).

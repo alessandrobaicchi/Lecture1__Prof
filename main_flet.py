@@ -1,10 +1,10 @@
 import flet as ft
 # questa riga importa la libreria Flet e le assegna il nome abbreviato ft
 
-from gestionale.view import View
+from UI.view import View
 # questa riga importa la classe View dal modulo view del package gestionale
 
-from gestionale.controller import Controller
+from UI.controller import Controller
 # questa riga importa la classe Controller dal modulo controller del package gestionale
 
 def main(page: ft.Page):

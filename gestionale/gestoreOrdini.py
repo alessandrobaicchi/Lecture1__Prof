@@ -65,10 +65,11 @@ class GestoreOrdini:
         print("\n" + "-" * 60)
         print("\n" + "=" * 60)
         # Se la coda è vuota, non c’è nulla da processare.
-        # Restituisce False per segnalare che non è stato fatto alcun lavoro.
+        # Restituisce False per segnalare che non è stato fatto alcun lavoro. Per avere una return consistente
+        # con la return True, ritorno un ordine vuoto
         if not self._ordini_da_processare:
             print("Non ci sono ordini in coda.")
-            return False
+            return False, Ordine([],ClienteRecord("","",""))
 
         # Estrae il primo ordine dalla coda FIFO.
         # popleft() è O(1) e rispetta la logica di arrivo degli ordini.
@@ -107,8 +108,9 @@ class GestoreOrdini:
 
         print("Ordine processato correttamente!")
 
-        # Restituisce True per indicare che l’ordine è stato processato correttamente.
-        return True
+        # Restituisce True per indicare che l’ordine è stato processato correttamente. Inoltre,
+        # restituisce anche l'ordine creato.
+        return True, ordine
 
 
 
@@ -119,9 +121,16 @@ class GestoreOrdini:
         # Il while sulla deque è sicuro perché popleft() la svuota progressivamente.
         print("\n" + "=" * 60)
         print(f"Processando {len(self._ordini_da_processare)} ordini!")
+        # Creo una lista che conterrà tutti gli ordini processati e sarà il return di questo metodo,
+        # ad esempio userò il return in controller.py
+        ordini = []
         while self._ordini_da_processare:
-            self.processa_prossimo_ordine()
+            _,ordine = self.processa_prossimo_ordine()
+            # processa_prossimo_ordine() ha due parametri come return. Qui il secondo non mi serve, però
+            # DEVO dargli un nome fittizio: lo chiamo _ (è una convenzione questo nome fittizio).
+            ordini.append(ordine)
         print("Tutti gli ordini sono stati processati!")
+        return ordini
 
 
 
@@ -185,6 +194,28 @@ class GestoreOrdini:
         print("Fatturato per categoria:")
         for cat, fatturato in self.get_distribuzione_categorie():
             print(f"{cat} : {fatturato}")
+
+
+    def get_riepilogo(self):
+        """Restituisce info di massima"""
+        # Metodo che restituisce le info di massima. Mi serve per controller.py. Non posso usare in
+        # controller.py stampa_riepilogo() perché non ha return. Qui creo invece una stringa sommario
+        #  che conterrà tutto il riepilogo e sarà il return di questo metodo.
+        sommario = ""
+        sommario += ("\n" + "=" * 60)
+        sommario += f"\n Ordini correttamente gestiti: {len(self._ordini_processati)}"
+        sommario += f"\n Ordini in coda: {len(self._ordini_da_processare)}"
+
+        sommario += "\n Prodotti più venduti:"
+        for prod, quantita in self.get_statistiche_prodotti():
+            sommario += f"\n {prod}: {quantita}"
+
+        sommario += "\n Fatturato per categoria:"
+        for cat, fatturato in self.get_distribuzione_categorie():
+            sommario += f"\n {cat} : {fatturato}"
+        sommario += ("\n" + "=" * 60)
+
+        return sommario
 
 
 def test_modulo():

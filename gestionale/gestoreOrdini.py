@@ -5,11 +5,12 @@ Scrivere un software gestionale che abbia le seguenti funzionalità:
 2)  Avere delle funzionalità per avere statistiche sugli ordini.
 3)  Fornire statistiche sulla distribuzione di ordini per categoria di cliente.
 """
-
+import random
 from collections import deque, Counter, defaultdict
 
-from gestionale.core.clienti import ClienteRecord
-from gestionale.core.prodotti import ProdottoRecord
+from dao.dao import DAO
+from gestionale.core.cliente import ClienteRecord
+from gestionale.core.prodotto import ProdottoRecord
 from gestionale.vendite.ordini import Ordine, RigaOrdine
 
 
@@ -34,7 +35,26 @@ class GestoreOrdini:
         #   --> se si accede ad una chiave che non esiste, inveve di dare errore crea
         #       automaticamente un valore di default, in questo caso una lista vuota!
         self._ordini_per_categoria = defaultdict(list)
+        self._dao = DAO()   # Creo una istanza del DAO perché voglio usare i suoi metodi
+        self._allP = []     # Per i Prodotti
+        self._allC = []     # Per i Clienti
+        self._fill_data()   # Mi serve per chiamare il metodo fill_data()
 
+
+    def _fill_data(self):
+        # Leggo Prodotti e Clienti dal DB e poi creo degli ordini random per testare la mia app.
+        self._allP.extend(self._dao.getAllProdotti())
+        self._allC.extend(self._dao.getAllClienti())
+        # Dato che questo metodo non sa se allP e allC contengono già dei prodotti e dei valori, invece che
+        # fare l'assegnazione (=) uso il metodo extend().
+
+        # Ora creo degli Ordini a caso (ne faccio 10)
+        for i in range(10):
+            indexP = random.randint(0, len(self._allP) - 1)
+            indexC = random.randint(0, len(self._allC) - 1)
+            ordine = Ordine( [RigaOrdine(self._allP[indexP], random.randint(1,5))],
+                             self._allC[indexC])
+            self.add_ordine(ordine)     # Aggiungo l'ordine appena creato al deque con add_ordine()
 
 
     def add_ordine(self, ordine: Ordine):

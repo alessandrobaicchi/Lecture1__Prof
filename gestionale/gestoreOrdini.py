@@ -67,8 +67,23 @@ class GestoreOrdini:
 
 
     def crea_ordine(self, nomeP, prezzoP, quantitaP, nomeC, emailC, categoriaC):
-        return Ordine([RigaOrdine(ProdottoRecord(nomeP,prezzoP),quantitaP)],
-                      ClienteRecord(nomeC,emailC,categoriaC))
+        # Quando creo l'ordine, invece di fare la return di tale ordine,
+        # posso crearmi gli oggetti DTO di Prodotto e Cliente.
+        prod = ProdottoRecord(nomeP,prezzoP)
+        cliente = ClienteRecord(nomeC,emailC,categoriaC)
+        # Metodo a cui passo prod e cliente, che chiama i metodi definiti in dao.py
+        self._update_DB(prod,cliente)
+        return Ordine([RigaOrdine(prod,quantitaP)],cliente)
+
+
+    def _update_DB(self, prod, cliente):
+        # Se provo ad aggiungere un nuovo prodotto o un nuovo cliente con una chiave primaria
+        # già esistente nel database, il database dà errore. Controllo preventivamente.
+        if not self._dao.hasProdotto(prod):
+            self._dao.addProdotto(prod)
+
+        if not self._dao.hasCliente(cliente):
+            self._dao.addCliente(cliente)
 
 
     def processa_prossimo_ordine(self):

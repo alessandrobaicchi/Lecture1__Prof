@@ -35,7 +35,8 @@ class GestoreOrdini:
         #   --> se si accede ad una chiave che non esiste, inveve di dare errore crea
         #       automaticamente un valore di default, in questo caso una lista vuota!
         self._ordini_per_categoria = defaultdict(list)
-        self._dao = DAO()   # Creo una istanza del DAO perché voglio usare i suoi metodi
+        #self._dao = DAO()   # Creo una istanza del DAO perché voglio usare i suoi metodi
+                             # Applicando il Pooling non serve più l'istanza del DAO
         self._allP = []     # Per i Prodotti
         self._allC = []     # Per i Clienti
         self._fill_data()   # Mi serve per chiamare il metodo fill_data()
@@ -43,8 +44,8 @@ class GestoreOrdini:
 
     def _fill_data(self):
         # Leggo Prodotti e Clienti dal DB e poi creo degli ordini random per testare la mia app.
-        self._allP.extend(self._dao.getAllProdotti())
-        self._allC.extend(self._dao.getAllClienti())
+        self._allP.extend(DAO.getAllProdotti())
+        self._allC.extend(DAO.getAllClienti())
         # Dato che questo metodo non sa se allP e allC contengono già dei prodotti e dei valori, invece che
         # fare l'assegnazione (=) uso il metodo extend().
 
@@ -79,11 +80,11 @@ class GestoreOrdini:
     def _update_DB(self, prod, cliente):
         # Se provo ad aggiungere un nuovo prodotto o un nuovo cliente con una chiave primaria
         # già esistente nel database, il database dà errore. Controllo preventivamente.
-        if not self._dao.hasProdotto(prod):
-            self._dao.addProdotto(prod)
+        if not DAO.hasProdotto(prod):
+            DAO.addProdotto(prod)
 
-        if not self._dao.hasCliente(cliente):
-            self._dao.addCliente(cliente)
+        if not DAO.hasCliente(cliente):
+            DAO.addCliente(cliente)
 
 
     def processa_prossimo_ordine(self):

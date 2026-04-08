@@ -8,7 +8,8 @@ from gestionale.core.prodotto import ProdottoRecord
 class DAO:
 
     # ************************************* PROTOTIPI DI METODI CHE LEGGONO DAL DB*********************************
-    def getAllProdotti(self):
+    @staticmethod
+    def getAllProdotti():
         # Creo la connessione al DB
         # cnx = mysql.connector.connect(
         #     user = "root",
@@ -38,8 +39,8 @@ class DAO:
         return res
 
 
-
-    def getAllClienti(self):
+    @staticmethod
+    def getAllClienti():
         # Creo la connessione al DB
         # cnx = mysql.connector.connect(
         #     user = "root",
@@ -70,7 +71,8 @@ class DAO:
 
 
     # ************************************* PROTOTIPI DI METODI CHE SCRIVONO SUL DB*********************************
-    def addProdotto(self,prodotto):
+    @staticmethod
+    def addProdotto(prodotto):
         # Creo la connessione al DB
         # cnx = mysql.connector.connect(
         #     user = "root",
@@ -96,8 +98,8 @@ class DAO:
         cnx.close()
         return
 
-
-    def addCliente(self, cliente):
+    @staticmethod
+    def addCliente(cliente):
         # Creo la connessione al DB
         # cnx = mysql.connector.connect(
         #     user = "root",
@@ -127,7 +129,8 @@ class DAO:
 
     # Questo metodo controlla se esiste già nel database un cliente con la stessa mail.
     # Restituisce True se il cliente è presente, False altrimenti.
-    def hasCliente(self, cliente):
+    @staticmethod
+    def hasCliente(cliente):
 
         # 1) Creo la connessione al database.
         #    Il DAO è l’unico punto dell’applicazione autorizzato a farlo.
@@ -171,7 +174,8 @@ class DAO:
 
 
     # Considerazioni analoghe al metodo hasCliente()
-    def hasProdotto(self, prod):
+    @staticmethod
+    def hasProdotto(prod):
         # Creo la connessione al DB
         # cnx = mysql.connector.connect(
         #     user="root",
